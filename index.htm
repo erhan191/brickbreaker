@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Game</title>
+</head>
+<body>
+	<canvas id="myCanvas" width="1000" height="600" style="border:1px solid #000000;" >
+</canvas>
+
+<script >
+	var canvas = document.getElementById("myCanvas");
+	var score = 0;
+	
+	var ctxRed = canvas.getContext("2d");
+	var ctxBlue = canvas.getContext("2d");
+	var ctxYellow= canvas.getContext("2d");
+	var ctxGreen = canvas.getContext("2d");
+	var ctxPurple = canvas.getContext("2d");
+	var ctxBar= canvas.getContext("2d");
+	var scoreBox = canvas.getContext("2d");
+
+	var ball=canvas.getContext("2d");
+	var x = canvas.width/2;
+	var y=490;
+	var ballRadius=10;
+
+
+
+	var dx=2;
+	var dy=-2;
+	var ballColor='#3399ff';
+	
+	var brickWidth = 280;
+	var brickHeight = 50;
+	
+	var redStartX=30;
+	var redStartY=30;
+	var redEndX=redStartX+brickWidth;
+	var redEndY=redStartY+brickHeight;
+
+	var greenStartX=690;
+	var greenStartY=30;
+	var greenEndX=greenStartX+brickWidth;
+	var greenEndY=greenStartY+brickHeight;
+
+
+	var blueStartX=360;
+	var blueStartY=30;
+	var blueEndX=blueStartX+brickWidth;
+	var blueEndY=blueStartY+brickHeight;
+
+
+	var purpleStartX=200;
+	var purpleStartY=150;
+	var purpleEndX=purpleStartX+brickWidth;
+	var purpleEndY=purpleStartY+brickHeight;
+
+	var yellowStartX=550;
+	var yellowStartY=150;
+	var yellowEndX=yellowStartX+brickWidth;
+	var yellowEndY=yellowStartY+brickHeight;
+
+	
+	var barHeight = 10;
+	var barWidth = 200;
+	var barX = (canvas.width-barWidth)/2;
+	var rightPressed = false;
+	var leftPressed = false;
+
+	var live=1;
+
+
+
+
+	//*-----------------BLOCKS--------------------
+	function drawBricks(){
+	ctxRed.fillStyle = "red";
+	ctxRed.fillRect(redStartX,redStartY, brickWidth, brickHeight);
+
+	ctxBlue.fillStyle = "blue";
+	ctxBlue.fillRect(blueStartX,blueStartY, brickWidth, brickHeight);
+	
+	ctxGreen.fillStyle = "green";
+	ctxGreen.fillRect(greenStartX,greenStartY,brickWidth, brickHeight);
+
+	ctxPurple.fillStyle = "purple";
+	ctxPurple.fillRect(purpleStartX,purpleStartY, brickWidth, brickHeight);
+
+	ctxYellow.fillStyle = "yellow";
+	ctxYellow.fillRect(yellowStartX,yellowStartY, brickWidth, brickHeight);
+
+	}
+	
+	function drawScore(){
+	scoreBox.fillStyle="black";
+	scoreBox.font = "30px Arial";
+	scoreBox.fillText("Score: "+ score, 10,570);
+
+	
+	}
+//*------------------------------------------BLOCKSIDE OVER---------------------------------------
+function drawObstacle(){
+    
+    var obstacle= canvas.getContext("2d");
+    obstacle.fillStyle = "black";
+    obstacle.fillRect(80,350,500, 10);
+
+
+}
+
+var i=0;
+function detect(){
+		//-----------------------------IF BALL TOUCHES RED OBSTACLE-------------------------------------------------
+		
+
+		if((redStartX< x && x< redEndX) && (y>redStartY && y<redEndY)){
+			dy=-(1+Math.random()*0.5)*dy;
+
+			redStartX=-2*redStartX;
+			redStartY=-2*redStartY;
+			redEndX=-2*redEndX;
+			redEndY=-2*redEndY;
+			ballColor='red';
+			score+=20;
+			i++;
+
+
+		}
+		if((x==redStartX||x==redEndX) && (y > redStartY&& y<redEndY)){
+
+		   		dx=-dx;
+
+			redStartX=-2*redStartX;
+			redStartY=-2*redStartY;
+			redEndX=-2*redEndX;
+			redEndY=-2*redEndY;
+			ballColor='red';
+			score+=20;
+			i++;
+
+		 }
+
+//-----------------------------------------------------------------------------------------------------------	
+//-------------------------------------IF BALL TOUCHES BLUE OBSTACLE------------------------------------------
+
+		if((blueStartX<x && x <blueEndX) && (y >blueStartY && y <blueEndY)){
+			dy=-(1+Math.random()*0.5)*dy;
+
+			blueStartX=-blueStartX;
+			blueStartY=-blueStartY;
+			blueEndX=-blueEndX;
+			blueEndY=-blueEndY;
+			ballColor='blue';
+			score+=40;
+			i++;
+		 	
+		}
+
+		if((x==blueStartX||x==blueEndX) && (y > blueStartY && y<blueEndY)){
+
+			dx=-dx;
+		   	blueStartX=-blueStartX;
+			blueStartY=-blueStartY;
+			blueEndX=-blueEndX;
+			blueEndY=-blueEndY;
+			ballColor='blue';
+			score+=40;
+			i++;
+		 }
+
+
+//-------------------------------------------------------------------------------------------------
+//---------------------------------IF BALL TOUCHES GREEN OBSTACLE------------------------------------------
+		
+		if((greenStartX < x && x+dx <greenEndX) && (y>greenStartY && y< greenEndY)){
+			dy=-(1+Math.random()*0.5)*dy;
+
+			greenStartX=-greenStartX;
+			greenStartY=-greenStartY;
+			greenEndX=-greenEndX;
+			greenEndY=-greenEndY;
+			ballColor='green';
+			score+=80;
+			i++;
+
+		}
+
+		if((x==greenStartX ||x==greenEndX ) && (y > greenStartY&& y<greenEndY)){
+
+		   	dx=-dx;
+		   	greenStartX=-greenStartX;
+			greenStartY=-greenStartY;
+			greenEndX=-greenEndX;
+			greenEndY=-greenEndY;
+			ballColor='green';
+			score+=80;
+			i++;
+		 }
+
+	
+//-------------------------------------------------------------------------------------------------------------
+//----------------------------------IF BALL TOUCHES PURPLE OBSTACLE----------------------------------------------	
+		if((purpleStartX< x && x< purpleEndX) && (y>purpleStartY && y<purpleEndY)){
+			dy=-(1+Math.random()*0.5)*dy;
+
+			purpleStartX=-purpleStartX;
+			purpleStartY=-purpleStartY;
+			purpleEndX=-purpleEndX;
+			purpleEndY=-purpleEndY;
+			ballColor='purple';
+			score+=60;
+			i++;
+
+		}	
+		if((x==purpleStartX ||x==purpleEndX) &&(y > purpleStartY&& y<purpleEndY)) {
+
+		   	dx=-dx;
+		   	purpleStartX=-purpleStartX;
+			purpleStartY=-purpleStartY;
+			purpleEndX=-purpleEndX;
+			purpleEndY=-purpleEndY;
+			ballColor='purple';
+			score+=60;
+			i++;
+		 }
+//-------------------------------------------------------------------------------------------		
+//-----------------------------IF BALL TOUCHES YELLOW OBSTACLE-------------------------------	
+
+
+
+		if((yellowStartX<x && x+dx < yellowEndX)&& (y>yellowStartY && y<yellowEndY)){
+			
+			
+			dy=-(1+Math.random()*0.5)*dy;
+			
+			yellowStartX=-yellowStartX;
+			yellowStartY=-yellowStartY;
+			yellowEndX=-yellowEndX;
+			yellowEndY=-yellowEndY;
+			ballColor='yellow';
+			score += 50;
+			i++;
+
+		}
+		if((x==yellowStartX ||x==yellowEndX)&& (y>=yellowStartY && y<=yellowEndY)){
+				dx=-dx;
+			yellowStartX=-yellowStartX;
+			yellowStartY=-yellowStartY;
+			yellowEndX=-yellowEndX;
+			yellowEndY=-yellowEndY;
+			ballColor='yellow';
+			score += 50;
+			i++;
+			}
+		
+//--------------------------------------------------------------------------------------------
+//-----------------IF BALL TOUCHES OBSTACLE------------------------------------------------
+        if((80<x && x <580) && (y>350 && y<360)){
+            dy=-dy;
+            
+        }
+
+
+        if((x==80 ||x==580 ) &&(y>350 && y<360)){
+        	dx=-dx;
+        }
+//----------------------------------------------------------------------------------------
+			
+			if(i==5){
+
+			alert("CONGRATULATIONS!!!");
+			document.location.reload();
+			i=0; 	 	
+			}
+	}
+		
+		
+
+//--------------------------BAR MOVEMENT---------------------------------------
+
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);
+document.addEventListener("mousemove", mouseMoveHandler, false);
+
+
+function keyDownHandler(e) {
+    if(e.keyCode == 39) {
+        rightPressed = true;
+    }
+    else if(e.keyCode == 37) {
+        leftPressed = true;
+    }
+}
+function keyUpHandler(e) {
+    if(e.keyCode == 39) {
+        rightPressed = false;
+    }
+    else if(e.keyCode == 37) {
+        leftPressed = false;
+    }
+}
+function mouseMoveHandler(e) {
+    var relativeX = e.clientX - canvas.offsetLeft;
+    if(relativeX > 0 && relativeX < canvas.width) {
+        barX = relativeX - barWidth/2;
+    }
+}
+//------------------------------------------------------------------------------------
+
+//------------------------------------DRAW BAR-----------------------------------------
+function drawBar() {
+    ctxBar.beginPath();
+    ctxBar.rect(barX, canvas.height-barHeight, barWidth, barHeight);
+    ctxBar.fillStyle = "#0095DD";
+    ctxBar.fill();
+    ctxBar.closePath();
+}
+
+//------------------------------------------------------------------------------------
+
+
+//*-------------------------------BALL AND MOVEMENT-----------------------------------------------	
+	
+
+	function drawBall(){
+	ball.clearRect(0, 0, canvas.width, canvas.height);
+	ball.beginPath();
+	ball.arc(x,y,ballRadius, 0, 2 * Math.PI);
+	ball.fillStyle=ballColor;
+	ball.fill();
+	ball.closePath();
+
+}
+
+//*-----------------------------------------------------------------------------------------------
+//* ------------------------------------Ball MOVEMENT---------------------------------------------
+	function draw(){
+		
+		drawBall();
+		drawScore();
+		drawBricks();
+		detect();
+		drawBar();
+		drawObstacle();
+
+		 
+    if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
+        dx = -dx;
+    }
+    if(y + dy < ballRadius) {
+        dy = -dy;
+    }
+    else if(y + dy > canvas.height-ballRadius) {
+        if(x > barX && x < barX + barWidth) {
+            dy = -dy;
+        }
+        else {
+            live--;
+            if(!live) {
+                alert("GAME OVER");
+                document.location.reload();
+            }
+        }
+    }
+    
+    if(rightPressed && barX < canvas.width-barWidth) {
+        barX += 7;
+    }
+    else if(leftPressed && barX > 0) {
+        barX -= 7;
+    }
+
+    
+    x += dx;
+    y += dy;
+
+	}
+//*--------------------------------------------------------------------------------------------------	
+	setInterval(draw,6);
+
+	draw();
+	
+
+</script>
+
+</body>
+</html>
